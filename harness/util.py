@@ -129,6 +129,9 @@ def new_initArgParsers(self):
     self._main_parser.add_argument('-l', '--list', dest='list_tests',
             action='store_true',
             help='List test cases and exit')
+    self._main_parser.add_argument('-L', '--Load', dest='load_dir',
+            action='store',
+            help='load testcase dir')
     self._main_parser.add_argument('-s', '--subtests', dest='subtest_list',
             action='store',
             help='Subtests to execute [default all, i.e. "1-16"]')
@@ -161,8 +164,13 @@ def new_parseArgs(self, argv):
     Global.verbosity = self.verbosity
     Global.debug = self.debug
     if self.list_tests:
-        print_suite(unittest.defaultTestLoader.discover('.'))
+        if self.load_dir and os.path.exists(self.load_dir):
+            print_suite(unittest.defaultTestLoader.discover(self.load_dir))
+        else:
+            print_suite(unittest.defaultTestLoader.discover('.'))
         sys.exit(0)
+    if self.load_dir and os.path.exists(self.load_dir):
+        unittest.TestLoader().discover(self.load_dir)
     for v in ['target', 'ipnr', 'device']:
         if getattr(self, v) is None:
             print('Error: "%s" required' % v.upper())
