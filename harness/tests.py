@@ -241,5 +241,6 @@ class TestRegression(unittest.TestCase):
                       '-T', Global.target,
                       '-p', Global.ipnr,
                       '--logout'])
+        util.run_cmd(['iscsiadm', '-m', 'node', '-U', 'all'])
         Global.total_time = time.perf_counter() - cls.time_start
         print_time_values()
